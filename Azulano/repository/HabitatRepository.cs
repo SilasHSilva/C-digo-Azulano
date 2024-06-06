@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Azulano.Data;
 using Azulano.Models.Habitat;
 using Microsoft.EntityFrameworkCore;
@@ -21,19 +17,68 @@ namespace Azulano.repository
             return await _dbContext.Habitat.FirstOrDefaultAsync(x => x.Id == Id);
         }
 
-        internal async Task<HabitatModel> Adicionar(HabitatModel habitatModel)
+        public async Task<HabitatModel> Adicionar(HabitatModel habitatModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _dbContext.Habitat.AddAsync(habitatModel);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return habitatModel;
         }
 
-        internal async Task<HabitatModel> BuscarPorId(int id)
+        public async Task<HabitatModel> BuscarPorId(int id)
         {
-            throw new NotImplementedException();
+            var habitat = await _dbContext.Habitat.FirstOrDefaultAsync(x => x.Id == id);
+            if (habitat == null)
+            {
+                throw new Exception($"Habitat com ID {id} não encontrado.");
+            }
+            return habitat;
         }
 
-        internal async Task<List<HabitatModel>> BuscarTodosHabitats()
+        public async Task<List<HabitatModel>> BuscarTodosHabitats()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Habitat.ToListAsync();
         }
+        public async Task<bool> Apagar(int id)
+        {
+            HabitatModel habitatPorId = await BuscarPorId(id);
+
+            if (habitatPorId == null)
+            {
+                throw new Exception($"Habitat para o ID: {id} não foi encontrado no banco de dados.");
+            }
+
+            _dbContext.Habitat.Remove(habitatPorId);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<HabitatModel> Atualizar(HabitatModel habitatModel, int id)
+        {
+            HabitatModel habitatPorId = await BuscarPorId(id);
+
+            if (habitatPorId == null)
+            {
+                throw new Exception($"Usuário para o ID: {id} não foi encontrado no banco de dados.");
+            }
+            habitatPorId.NameHabitat = habitatModel.NameHabitat;
+            habitatPorId.DescricaoHabitat = habitatModel.DescricaoHabitat;
+            habitatPorId.Localizacao = habitatModel.Localizacao;
+
+
+            _dbContext.Habitat.Update(habitatPorId);
+            await _dbContext.SaveChangesAsync();
+
+            return habitatPorId;
+        }
+
     }
 }

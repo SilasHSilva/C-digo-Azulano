@@ -42,16 +42,16 @@ namespace Azulano.Controllers
             return Ok(habitat);
         }
         [HttpPut("{id}")]
-        public async Task<ActionResult<UsuarioModel>> Atualizar([FromBody] UsuarioModel usuarioModel, int id)
+        public async Task<ActionResult<HabitatModel>> Atualizar([FromBody] HabitatModel habitatModel, int id)
         {
-            usuarioModel.Id = id;
-            UsuarioModel usuario = await _usuarioRepositorio.Atualizar(usuarioModel, id);
-            return Ok(usuario);
+            habitatModel.Id = id;
+            HabitatModel habitat = await _habitatRepository.Atualizar(habitatModel, id);
+            return Ok(habitat);
         }
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UsuarioModel>> Apagar(int id)
+        public async Task<ActionResult<HabitatModel>> Apagar(int id)
         {
-            bool apagado = await _usuarioRepositorio.Apagar(id);
+            bool apagado = await _habitatRepository.Apagar(id);
             return Ok(apagado);
         }
     }

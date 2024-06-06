@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Azulano.Data.Map;
 using Azulano.Models.Animals;
 using Azulano.Models.Habitat;
@@ -20,6 +16,7 @@ namespace Azulano.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new AnimalsMap());
+            modelBuilder.ApplyConfiguration(new HabitatMap());
 
             modelBuilder.Entity<AnimalsModel>()
             .HasOne(a => a.Habitat)
@@ -28,7 +25,7 @@ namespace Azulano.Data
             .HasConstraintName("FK_AnimalsModel_Habitat");
 
             modelBuilder.Entity<HabitatModel>()
-                .HasKey(u => u.Id);
+                .HasKey(h => h.Id);
 
             modelBuilder.Entity<AnimalsModel>()
                 .HasKey(a => a.Id);
